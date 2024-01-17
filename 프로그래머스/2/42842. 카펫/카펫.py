@@ -1,4 +1,3 @@
-from itertools import combinations
 def solution(brown, yellow):
     total = brown + yellow #총 카펫 수 
     for i in range(1, int((total+1)/2)): #효율을 위해 절반만 
