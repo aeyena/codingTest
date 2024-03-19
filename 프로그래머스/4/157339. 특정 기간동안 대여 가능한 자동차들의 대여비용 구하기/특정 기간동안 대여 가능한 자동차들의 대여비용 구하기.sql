@@ -1,0 +1,21 @@
+SELECT CC_CH.CAR_ID, 
+       CC_CH.CAR_TYPE, 
+       CC_CH.DAILY_FEE * (100-DISCOUNT_RATE)*0.01*30 FEE
+FROM CAR_RENTAL_COMPANY_DISCOUNT_PLAN CP INNER JOIN 
+    (    
+         -- 자동차 종류가 '세단' 또는 'SUV'인 자동차
+        SELECT CAR_ID, CAR_TYPE, DAILY_FEE
+        FROM CAR_RENTAL_COMPANY_CAR 
+        WHERE CAR_ID NOT IN 
+            (   
+                -- 2022년 11월 1일부터 2022년 11월 30일까지 대여 불가능한 자동차
+                SELECT CAR_ID
+                FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY
+                WHERE START_DATE <= TO_DATE('2022-11-30','YYYY-MM-DD') 
+                AND END_DATE >= TO_DATE('2022-11-01','YYYY-MM-DD')
+            ) 
+        AND CAR_TYPE IN ('SUV','세단')
+    ) CC_CH ON (CP.CAR_TYPE = CC_CH.CAR_TYPE)
+WHERE CP.DURATION_TYPE = '30일 이상'
+AND CC_CH.DAILY_FEE * (100-DISCOUNT_RATE)*0.01*30 BETWEEN 500000 AND 2000000
+ORDER BY 3 DESC, 2 ASC, 1 DESC
