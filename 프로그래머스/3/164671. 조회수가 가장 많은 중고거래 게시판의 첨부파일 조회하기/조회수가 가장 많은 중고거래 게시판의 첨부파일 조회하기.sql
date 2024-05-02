@@ -1,0 +1,8 @@
+-- 코드를 입력하세요
+SELECT '/home/grep/src/' || BOARD_ID || '/' || FILE_ID || FILE_NAME || FILE_EXT FILE_PATH
+FROM USED_GOODS_FILE
+WHERE BOARD_ID = (
+                    SELECT MAX(BOARD_ID) KEEP (DENSE_RANK FIRST ORDER BY VIEWS DESC) BOARD_ID
+                    FROM USED_GOODS_BOARD
+                 )
+ORDER BY FILE_ID DESC
